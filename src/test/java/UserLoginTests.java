@@ -1,3 +1,4 @@
+import com.github.javafaker.Faker;
 import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
@@ -17,9 +18,6 @@ public class UserLoginTests {
 
 
     private String fullToken;
-    private String token;
-    private String fullToken1;
-    private String token1;
     private boolean success;
     private String message;
 
@@ -52,13 +50,14 @@ public class UserLoginTests {
     @DisplayName("Авторизация пользователя")
     @Description("Авторизация пользователя с неверным логином, статус ответ 401")
     public void loginUserWithWrongLogin() {
+        Faker faker = new Faker();
         User user = randomUser();
         UserClient userClient = new UserClient();
 
         Response response = userClient.create(user);
         fullToken = response.path("accessToken");
 
-        user.setEmail("7837438@yandex.ru");
+        user.setEmail(faker.internet().emailAddress());
 
         Response responseLogin = userClient.login(UserLogin.fromUser(user));
         message = responseLogin.path("message");
@@ -77,13 +76,14 @@ public class UserLoginTests {
     @DisplayName("Авторизация пользователя")
     @Description("Авторизация пользователя с неверным паролем, статус ответ 401")
     public void loginUserWithWrongPassword() {
+        Faker faker = new Faker();
         User user = randomUser();
         UserClient userClient = new UserClient();
 
         Response response = userClient.create(user);
         fullToken = response.path("accessToken");
 
-        user.setPassword("7837438");
+        user.setPassword(faker.letterify("????????"));
 
         Response response1 = userClient.login(UserLogin.fromUser(user));
         message = response1.path("message");
@@ -102,14 +102,15 @@ public class UserLoginTests {
     @DisplayName("Авторизация пользователя")
     @Description("Авторизация пользователя с неверным логином и паролем, статус ответ 401")
     public void loginUserWithWrongLoginAndPassword() {
+        Faker faker = new Faker();
         User user = randomUser();
         UserClient userClient = new UserClient();
 
         Response response = userClient.create(user);
         fullToken = response.path("accessToken");
 
-        user.setEmail("7837438@yandex.ru");
-        user.setPassword("7837438");
+        user.setEmail(faker.internet().emailAddress());
+        user.setPassword(faker.letterify("????????"));
 
         Response response1 = userClient.login(UserLogin.fromUser(user));
         message = response1.path("message");

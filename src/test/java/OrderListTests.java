@@ -19,29 +19,26 @@ import static userpackage.UserGenerator.randomUser;
 public class OrderListTests {
 
     private static final String BASE_URL = "https://stellarburgers.nomoreparties.site";
-
-
     private String fullToken;
-
     private String number;
-
     private String numberOrder;
-
-    private String token;
     private boolean success;
     private String message;
-
+    private UserClient userClient;
+    private User user;
+    private OrderClient orderClient;
     @Before
-    public void setUp() {
+    public void setUp() throws Exception {
         RestAssured.baseURI = BASE_URL;
+        user = randomUser();
+        userClient = new UserClient();
+        orderClient = new OrderClient();
     }
 
     @Test
     @DisplayName("Получение списка заказов")
     @Description("Получение списка заказов конкретного пользователя с авторизацией, статус ответ 200")
     public void createOrderWithAuth() {
-        User user = randomUser();
-        UserClient userClient = new UserClient();
 
         Response response = userClient.create(user);
 
@@ -49,7 +46,6 @@ public class OrderListTests {
         fullToken = loginResponse.path("accessToken");
 
         Order order = defaultOrder();
-        OrderClient orderClient = new OrderClient();
 
         Response orderResponse = orderClient.create(order, fullToken);
         number = orderResponse.path("number");
@@ -69,9 +65,6 @@ public class OrderListTests {
     @DisplayName("Получение списка заказов")
     @Description("Получение списка заказов конкретного пользователя без авторизации, статус ответ 401")
     public void createOrderWithoutAuth() {
-        User user = randomUser();
-        UserClient userClient = new UserClient();
-        OrderClient orderClient = new OrderClient();
 
         Response response = userClient.create(user);
 

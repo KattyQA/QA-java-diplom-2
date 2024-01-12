@@ -3,6 +3,7 @@ import io.qameta.allure.Description;
 import io.qameta.allure.junit4.DisplayName;
 import io.restassured.RestAssured;
 import io.restassured.response.Response;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import userpackage.User;
@@ -53,8 +54,6 @@ public class UserProfileTests {
         assertEquals("Неверный статус код", SC_OK, editResponse.statusCode());
         assertEquals(true, success);
 
-        Response delete = userClient.delete(fullToken);
-        assertEquals("Неверный статус код", SC_ACCEPTED, delete.statusCode());
     }
 
     @Test
@@ -82,8 +81,6 @@ public class UserProfileTests {
         assertEquals("Неверный статус код", SC_OK, editResponse.statusCode());
         assertEquals(true, success);
 
-        Response delete = userClient.delete(fullToken);
-        assertEquals("Неверный статус код", SC_ACCEPTED, delete.statusCode());
     }
 
     @Test
@@ -111,8 +108,6 @@ public class UserProfileTests {
         assertEquals("Неверный статус код", SC_OK, editResponse.statusCode());
         assertEquals(true, success);
 
-        Response delete = userClient.delete(fullToken);
-        assertEquals("Неверный статус код", SC_ACCEPTED, delete.statusCode());
     }
 
     @Test
@@ -142,8 +137,6 @@ public class UserProfileTests {
         assertEquals("Неверный статус код", SC_OK, editResponse.statusCode());
         assertEquals(true, success);
 
-        Response delete = userClient.delete(fullToken);
-        assertEquals("Неверный статус код", SC_ACCEPTED, delete.statusCode());
     }
 
     @Test
@@ -167,8 +160,6 @@ public class UserProfileTests {
         assertEquals("Неверный статус код", SC_UNAUTHORIZED, editResponse.statusCode());
         assertEquals(false, success);
 
-        Response delete = userClient.delete(fullToken);
-        assertEquals("Неверный статус код", SC_ACCEPTED, delete.statusCode());
     }
 
     @Test
@@ -192,8 +183,6 @@ public class UserProfileTests {
         assertEquals("Неверный статус код", SC_UNAUTHORIZED, editResponse.statusCode());
         assertEquals(false, success);
 
-        Response delete = userClient.delete(fullToken);
-        assertEquals("Неверный статус код", SC_ACCEPTED, delete.statusCode());
     }
 
     @Test
@@ -217,8 +206,6 @@ public class UserProfileTests {
         assertEquals("Неверный статус код", SC_UNAUTHORIZED, editResponse.statusCode());
         assertEquals(false, success);
 
-        Response delete = userClient.delete(fullToken);
-        assertEquals("Неверный статус код", SC_ACCEPTED, delete.statusCode());
     }
 
     @Test
@@ -244,6 +231,11 @@ public class UserProfileTests {
         assertEquals("Неверный статус код", SC_UNAUTHORIZED, editResponse.statusCode());
         assertEquals(false, success);
 
+    }
+
+    @After
+    public void deleteUser(){
+        UserClient userClient = new UserClient();
         Response delete = userClient.delete(fullToken);
         assertEquals("Неверный статус код", SC_ACCEPTED, delete.statusCode());
     }

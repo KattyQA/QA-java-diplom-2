@@ -92,7 +92,7 @@ public class OrderTests {
         Response loginResponse = userClient.login(UserLogin.fromUser(user));
         fullToken = loginResponse.path("accessToken");
 
-        Order order = orderWithWrongHash();
+        Order order = orderWithRandomHash();
         OrderClient orderClient = new OrderClient();
 
         Response orderResponse = orderClient.create(order, fullToken);
