@@ -19,75 +19,61 @@ public class UserProfileTests {
     private String fullToken;
     private String token;
     private boolean success;
+    private User user;
+    private UserClient userClient;
+    private Faker faker;
 
     @Before
     public void setUp() {
         RestAssured.baseURI = BASE_URL;
+        user = randomUser();
+        userClient = new UserClient();
+        faker = new Faker();
     }
 
     @Test
     @DisplayName("Редактирование профиля пользователя")
     @Description("Редактирование email авторизованного пользователя, статус ответа 200")
     public void editEmailInUserProfile() {
-        User user = randomUser();
-        UserClient userClient = new UserClient();
-        Faker faker = new Faker();
-
         Response response = userClient.create(user);
         assertEquals("Неверный статус код", SC_OK, response.statusCode());
-
         Response loginResponse = userClient.login(UserLogin.fromUser(user));
         fullToken = loginResponse.path("accessToken");
         assertEquals("Неверный статус код", SC_OK, loginResponse.statusCode());
-
         String email = faker.internet().emailAddress();
         String newEmail = "{\"email\": \"" + email + "\"}";
         Response editResponse = userClient.editEmail(fullToken, newEmail);
         success = editResponse.path("success");
         assertEquals("Неверный статус код", SC_OK, editResponse.statusCode());
         assertEquals(true, success);
-
     }
 
     @Test
     @DisplayName("Редактирование профиля пользователя")
     @Description("Редактирование имени авторизованного пользователя, статус ответа 200")
     public void editNameInUserProfile() {
-        User user = randomUser();
-        UserClient userClient = new UserClient();
-        Faker faker = new Faker();
-
         Response response = userClient.create(user);
         assertEquals("Неверный статус код", SC_OK, response.statusCode());
-
         Response loginResponse = userClient.login(UserLogin.fromUser(user));
         fullToken = loginResponse.path("accessToken");
         assertEquals("Неверный статус код", SC_OK, loginResponse.statusCode());
-
         String name = faker.name().name();
         String newName = "{\"name\": \"" + name + "\"}";
         Response editResponse = userClient.editName(fullToken, newName);
         success = editResponse.path("success");
         assertEquals("Неверный статус код", SC_OK, editResponse.statusCode());
         assertEquals(true, success);
-
     }
 
     @Test
     @DisplayName("Редактирование профиля пользователя")
     @Description("Редактирование пароля авторизованного пользователя, статус ответа 200")
     public void editPasswordInUserProfile() {
-        User user = randomUser();
-        UserClient userClient = new UserClient();
-        Faker faker = new Faker();
-
         Response response = userClient.create(user);
         assertEquals("Неверный статус код", SC_OK, response.statusCode());
-
         Response loginResponse = userClient.login(UserLogin.fromUser(user));
         fullToken = loginResponse.path("accessToken");
         assertEquals("Неверный статус код", SC_OK, loginResponse.statusCode());
-
         String password = faker.letterify("????????");
         String newPassword = "{\"password\": \"" + password + "\"}";
         Response editResponse = userClient.editPassword(fullToken, newPassword);
@@ -100,17 +86,11 @@ public class UserProfileTests {
     @DisplayName("Редактирование профиля пользователя")
     @Description("Редактирование всех данных авторизованного пользователя, статус ответа 200")
     public void editAllDataInUserProfile() {
-        User user = randomUser();
-        UserClient userClient = new UserClient();
-        Faker faker = new Faker();
-
         Response response = userClient.create(user);
         assertEquals("Неверный статус код", SC_OK, response.statusCode());
-
         Response loginResponse = userClient.login(UserLogin.fromUser(user));
         fullToken = loginResponse.path("accessToken");
         assertEquals("Неверный статус код", SC_OK, loginResponse.statusCode());
-
         String password = faker.letterify("????????");
         String name = faker.name().name();
         String email = faker.internet().emailAddress();
@@ -125,16 +105,10 @@ public class UserProfileTests {
     @DisplayName("Редактирование профиля пользователя")
     @Description("Редактирование email неавторизованного пользователя, статус ответа 401")
     public void editEmailInUserProfileWithoutAuth() {
-        User user = randomUser();
-        UserClient userClient = new UserClient();
-        Faker faker = new Faker();
-
         Response response = userClient.create(user);
         fullToken = response.path("accessToken");
-
         token = "";
         assertEquals("Неверный статус код", SC_OK, response.statusCode());
-
         String email = faker.internet().emailAddress();
         String newEmail = "{\"email\": \"" + email + "\"}";
         Response editResponse = userClient.editEmail(token, newEmail);
@@ -147,15 +121,10 @@ public class UserProfileTests {
     @DisplayName("Редактирование профиля пользователя")
     @Description("Редактирование имени неавторизованного пользователя, статус ответа 401")
     public void editNameInUserProfileWithoutAuth() {
-        User user = randomUser();
-        UserClient userClient = new UserClient();
-        Faker faker = new Faker();
-
         Response response = userClient.create(user);
         fullToken = response.path("accessToken");
         token = "";
         assertEquals("Неверный статус код", SC_OK, response.statusCode());
-
         String name = faker.name().name();
         String newName = "{\"name\": \"" + name + "\"}";
         Response editResponse = userClient.editName(token, newName);
@@ -168,15 +137,10 @@ public class UserProfileTests {
     @DisplayName("Редактирование профиля пользователя")
     @Description("Редактирование пароля неавторизованного пользователя, статус ответа 401")
     public void editPasswordInUserProfileWithoutAuth() {
-        User user = randomUser();
-        UserClient userClient = new UserClient();
-        Faker faker = new Faker();
-
         Response response = userClient.create(user);
         fullToken = response.path("accessToken");
         token = "";
         assertEquals("Неверный статус код", SC_OK, response.statusCode());
-
         String password = faker.letterify("????????");
         String newPassword = "{\"password\": \"" + password + "\"}";
         Response editResponse = userClient.editPassword(token, newPassword);
@@ -190,15 +154,10 @@ public class UserProfileTests {
     @DisplayName("Редактирование профиля пользователя")
     @Description("Редактирование всех данных неавторизованного пользователя, статус ответа 401")
     public void editAllDataInUserProfileWithoutAuth() {
-        User user = randomUser();
-        UserClient userClient = new UserClient();
-        Faker faker = new Faker();
-
         Response response = userClient.create(user);
         fullToken = response.path("accessToken");
         token = "";
         assertEquals("Неверный статус код", SC_OK, response.statusCode());
-
         String password = faker.letterify("????????");
         String name = faker.name().name();
         String email = faker.internet().emailAddress();
@@ -211,7 +170,6 @@ public class UserProfileTests {
 
     @After
     public void deleteUser(){
-        UserClient userClient = new UserClient();
         Response delete = userClient.delete(fullToken);
         assertEquals("Неверный статус код", SC_ACCEPTED, delete.statusCode());
     }
