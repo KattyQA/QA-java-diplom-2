@@ -4,6 +4,7 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import orderpackage.Order;
 import orderpackage.OrderClient;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import userpackage.User;
@@ -11,8 +12,7 @@ import userpackage.UserClient;
 import userpackage.UserLogin;
 
 import static orderpackage.OrderGenerator.defaultOrder;
-import static org.apache.http.HttpStatus.SC_OK;
-import static org.apache.http.HttpStatus.SC_UNAUTHORIZED;
+import static org.apache.http.HttpStatus.*;
 import static org.junit.Assert.assertEquals;
 import static userpackage.UserGenerator.randomUser;
 
@@ -20,6 +20,7 @@ public class OrderListTests {
 
     private static final String BASE_URL = "https://stellarburgers.nomoreparties.site";
     private String fullToken;
+    private String fakeFullToken;
     private String number;
     private String numberOrder;
     private boolean success;
@@ -57,8 +58,6 @@ public class OrderListTests {
         assertEquals("Неверный статус код", SC_OK, orderListResponse.statusCode());
         assertEquals(true, success);
         assertEquals(number, numberOrder);
-
-
     }
 
     @Test
@@ -67,17 +66,23 @@ public class OrderListTests {
     public void createOrderWithoutAuth() {
 
         Response response = userClient.create(user);
+        fullToken = response.path("accessToken");
 
-        fullToken = "";
+        fakeFullToken = "";
 
-        Response orderListResponse = orderClient.getOrderList(fullToken);
+        Response orderListResponse = orderClient.getOrderList(fakeFullToken);
         success = orderListResponse.path("success");
         message = orderListResponse.path("message");
 
         assertEquals("Неверный статус код", SC_UNAUTHORIZED, orderListResponse.statusCode());
         assertEquals(false, success);
         assertEquals("Неверное сообщение об ошибке", "You should be authorised", message);
+    }
 
-
+    @After
+    public void deleteUser(){
+        UserClient userClient = new UserClient();
+        Response delete = userClient.delete(fullToken);
+        assertEquals("Неверный статус код", SC_ACCEPTED, delete.statusCode());
     }
 }

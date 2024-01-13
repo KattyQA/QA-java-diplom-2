@@ -1,7 +1,6 @@
 package userpackage;
 
 public class UserLogin {
-
     private final String password;
     private String email;
 
@@ -9,9 +8,7 @@ public class UserLogin {
         this.email = email;
         this.password = password;
     }
-
     public static UserLogin fromUser(User user) {
         return new UserLogin(user.getEmail(), user.getPassword());
     }
-
 }

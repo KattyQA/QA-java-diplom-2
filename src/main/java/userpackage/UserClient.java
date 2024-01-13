@@ -6,7 +6,6 @@ import io.restassured.response.Response;
 import static io.restassured.RestAssured.given;
 
 public class UserClient {
-
     private static final String USER_URL = "/api/auth/register";
     private static final String USER_LOGIN_URL = "/api/auth/login";
     private static final String USER_PROFILE_URL = "/api/auth/user";
@@ -28,7 +27,6 @@ public class UserClient {
                 .header("Authorization", token)
                 .when()
                 .delete(DELETE_USER_URL);
-
     }
 
     @Step("Авторизация пользователя {userLogin}")
@@ -39,7 +37,6 @@ public class UserClient {
                 .body(userLogin)
                 .when()
                 .post(USER_LOGIN_URL);
-
     }
 
     @Step("Изменение данных электронной почты в профиле пользователя")
@@ -50,7 +47,6 @@ public class UserClient {
                 .body(newEmail)
                 .when()
                 .patch(USER_PROFILE_URL);
-
     }
 
     @Step("Изменение данных имени в профиле пользователя")
@@ -61,7 +57,6 @@ public class UserClient {
                 .body(newName)
                 .when()
                 .patch(USER_PROFILE_URL);
-
     }
 
     @Step("Изменение данных пароля в профиле пользователя")
@@ -72,7 +67,6 @@ public class UserClient {
                 .body(newPassword)
                 .when()
                 .patch(USER_PROFILE_URL);
-
     }
 
     @Step("Изменение всех данных в профиле пользователя")
@@ -83,7 +77,5 @@ public class UserClient {
                 .body(data)
                 .when()
                 .patch(USER_PROFILE_URL);
-
     }
-
 }

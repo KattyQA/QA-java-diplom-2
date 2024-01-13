@@ -12,12 +12,8 @@ import static org.junit.Assert.assertEquals;
 import static userpackage.UserGenerator.*;
 
 public class UserTests {
-
     private static final String BASE_URL = "https://stellarburgers.nomoreparties.site";
-
-
     private String fullToken;
-    private String token;
     private boolean success;
     private String message;
 
@@ -36,14 +32,11 @@ public class UserTests {
         Response response = userClient.create(user);
         success = response.path("success");
         fullToken = response.path("accessToken");
-
-
         assertEquals("Неверный статус код", SC_OK, response.statusCode());
         assertEquals(true, success);
 
         Response delete = userClient.delete(fullToken);
         assertEquals("Неверный статус код", SC_ACCEPTED, delete.statusCode());
-
     }
 
     @Test
@@ -65,7 +58,6 @@ public class UserTests {
 
         Response delete = userClient.delete(fullToken);
         assertEquals("Неверный статус код", SC_ACCEPTED, delete.statusCode());
-
     }
 
     @Test
@@ -81,7 +73,6 @@ public class UserTests {
         assertEquals("Неверный статус код", SC_FORBIDDEN, response.statusCode());
         assertEquals("Неверное сообщение об ошибке", "Email, password and name are required fields", message);
         assertEquals(false, success);
-
     }
 
     @Test
@@ -97,7 +88,6 @@ public class UserTests {
         assertEquals("Неверный статус код", SC_FORBIDDEN, response.statusCode());
         assertEquals("Неверное сообщение об ошибке", "Email, password and name are required fields", message);
         assertEquals(false, success);
-
     }
 
     @Test
@@ -113,7 +103,6 @@ public class UserTests {
         assertEquals("Неверный статус код", SC_FORBIDDEN, response.statusCode());
         assertEquals("Неверное сообщение об ошибке", "Email, password and name are required fields", message);
         assertEquals(false, success);
-
     }
 
 }

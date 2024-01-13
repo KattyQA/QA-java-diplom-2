@@ -4,6 +4,7 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import orderpackage.Order;
 import orderpackage.OrderClient;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import userpackage.User;
@@ -16,14 +17,11 @@ import static org.junit.Assert.assertEquals;
 import static userpackage.UserGenerator.randomUser;
 
 public class OrderTests {
-
     private static final String BASE_URL = "https://stellarburgers.nomoreparties.site";
-
-
     private String fullToken;
-    private String token;
     private boolean success;
     private String message;
+    private String fakeFullToken;
 
     @Before
     public void setUp() {
@@ -47,11 +45,8 @@ public class OrderTests {
 
         Response orderResponse = orderClient.create(order, fullToken);
         success = orderResponse.path("success");
-
         assertEquals("Неверный статус код", SC_OK, orderResponse.statusCode());
         assertEquals(true, success);
-
-
     }
 
     @Test
@@ -76,8 +71,6 @@ public class OrderTests {
         assertEquals("Неверный статус код", SC_BAD_REQUEST, orderResponse.statusCode());
         assertEquals("Неверное сообщение об ошибке", "Ingredient ids must be provided", message);
         assertEquals(false, success);
-
-
     }
 
     @Test
@@ -98,8 +91,6 @@ public class OrderTests {
         Response orderResponse = orderClient.create(order, fullToken);
 
         assertEquals("Неверный статус код", SC_INTERNAL_SERVER_ERROR, orderResponse.statusCode());
-
-
     }
 
 
@@ -111,20 +102,24 @@ public class OrderTests {
         UserClient userClient = new UserClient();
 
         Response response = userClient.create(user);
+        fullToken = response.path("accessToken");
 
-        fullToken = "";
+        fakeFullToken = "";
 
         Order order = defaultOrder();
         OrderClient orderClient = new OrderClient();
 
-        Response orderResponse = orderClient.create(order, fullToken);
+        Response orderResponse = orderClient.create(order, fakeFullToken);
         success = orderResponse.path("success");
 
         assertEquals("Неверный статус код", SC_OK, orderResponse.statusCode());
         assertEquals(true, success);
-
-
     }
 
-
+    @After
+    public void deleteUser(){
+        UserClient userClient = new UserClient();
+        Response delete = userClient.delete(fullToken);
+        assertEquals("Неверный статус код", SC_ACCEPTED, delete.statusCode());
+    }
 }

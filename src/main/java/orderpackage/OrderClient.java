@@ -29,5 +29,4 @@ public class OrderClient {
                 .when()
                 .get(ORDER_LIST_URL);
     }
-
 }

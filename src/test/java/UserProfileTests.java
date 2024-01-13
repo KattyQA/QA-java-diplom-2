@@ -15,14 +15,10 @@ import static org.junit.Assert.assertEquals;
 import static userpackage.UserGenerator.randomUser;
 
 public class UserProfileTests {
-
     private static final String BASE_URL = "https://stellarburgers.nomoreparties.site";
-
-
     private String fullToken;
     private String token;
     private boolean success;
-    private String message;
 
     @Before
     public void setUp() {
@@ -38,18 +34,15 @@ public class UserProfileTests {
         Faker faker = new Faker();
 
         Response response = userClient.create(user);
-
         assertEquals("Неверный статус код", SC_OK, response.statusCode());
 
         Response loginResponse = userClient.login(UserLogin.fromUser(user));
         fullToken = loginResponse.path("accessToken");
-
         assertEquals("Неверный статус код", SC_OK, loginResponse.statusCode());
 
         String email = faker.internet().emailAddress();
         String newEmail = "{\"email\": \"" + email + "\"}";
         Response editResponse = userClient.editEmail(fullToken, newEmail);
-        message = editResponse.path("message");
         success = editResponse.path("success");
         assertEquals("Неверный статус код", SC_OK, editResponse.statusCode());
         assertEquals(true, success);
@@ -65,18 +58,15 @@ public class UserProfileTests {
         Faker faker = new Faker();
 
         Response response = userClient.create(user);
-
         assertEquals("Неверный статус код", SC_OK, response.statusCode());
 
         Response loginResponse = userClient.login(UserLogin.fromUser(user));
         fullToken = loginResponse.path("accessToken");
-
         assertEquals("Неверный статус код", SC_OK, loginResponse.statusCode());
 
         String name = faker.name().name();
         String newName = "{\"name\": \"" + name + "\"}";
         Response editResponse = userClient.editName(fullToken, newName);
-        message = editResponse.path("message");
         success = editResponse.path("success");
         assertEquals("Неверный статус код", SC_OK, editResponse.statusCode());
         assertEquals(true, success);
@@ -92,22 +82,18 @@ public class UserProfileTests {
         Faker faker = new Faker();
 
         Response response = userClient.create(user);
-
         assertEquals("Неверный статус код", SC_OK, response.statusCode());
 
         Response loginResponse = userClient.login(UserLogin.fromUser(user));
         fullToken = loginResponse.path("accessToken");
-
         assertEquals("Неверный статус код", SC_OK, loginResponse.statusCode());
 
         String password = faker.letterify("????????");
         String newPassword = "{\"password\": \"" + password + "\"}";
         Response editResponse = userClient.editPassword(fullToken, newPassword);
-        message = editResponse.path("message");
         success = editResponse.path("success");
         assertEquals("Неверный статус код", SC_OK, editResponse.statusCode());
         assertEquals(true, success);
-
     }
 
     @Test
@@ -119,12 +105,10 @@ public class UserProfileTests {
         Faker faker = new Faker();
 
         Response response = userClient.create(user);
-
         assertEquals("Неверный статус код", SC_OK, response.statusCode());
 
         Response loginResponse = userClient.login(UserLogin.fromUser(user));
         fullToken = loginResponse.path("accessToken");
-
         assertEquals("Неверный статус код", SC_OK, loginResponse.statusCode());
 
         String password = faker.letterify("????????");
@@ -132,11 +116,9 @@ public class UserProfileTests {
         String email = faker.internet().emailAddress();
         String data = "{\"email\": \"" + email + "\"\", \"name\": \"" + name + "\"\",\"password\": \"" + password + "\"}";
         Response editResponse = userClient.editAllData(fullToken, data);
-        message = editResponse.path("message");
         success = editResponse.path("success");
         assertEquals("Неверный статус код", SC_OK, editResponse.statusCode());
         assertEquals(true, success);
-
     }
 
     @Test
@@ -159,7 +141,6 @@ public class UserProfileTests {
         success = editResponse.path("success");
         assertEquals("Неверный статус код", SC_UNAUTHORIZED, editResponse.statusCode());
         assertEquals(false, success);
-
     }
 
     @Test
@@ -178,11 +159,9 @@ public class UserProfileTests {
         String name = faker.name().name();
         String newName = "{\"name\": \"" + name + "\"}";
         Response editResponse = userClient.editName(token, newName);
-        message = editResponse.path("message");
         success = editResponse.path("success");
         assertEquals("Неверный статус код", SC_UNAUTHORIZED, editResponse.statusCode());
         assertEquals(false, success);
-
     }
 
     @Test
@@ -201,7 +180,6 @@ public class UserProfileTests {
         String password = faker.letterify("????????");
         String newPassword = "{\"password\": \"" + password + "\"}";
         Response editResponse = userClient.editPassword(token, newPassword);
-        message = editResponse.path("message");
         success = editResponse.path("success");
         assertEquals("Неверный статус код", SC_UNAUTHORIZED, editResponse.statusCode());
         assertEquals(false, success);
@@ -226,11 +204,9 @@ public class UserProfileTests {
         String email = faker.internet().emailAddress();
         String data = "{\"email\": \"" + email + "\"\", \"name\": \"" + name + "\"\",\"password\": \"" + password + "\"}";
         Response editResponse = userClient.editAllData(token, data);
-        message = editResponse.path("message");
         success = editResponse.path("success");
         assertEquals("Неверный статус код", SC_UNAUTHORIZED, editResponse.statusCode());
         assertEquals(false, success);
-
     }
 
     @After
@@ -239,5 +215,4 @@ public class UserProfileTests {
         Response delete = userClient.delete(fullToken);
         assertEquals("Неверный статус код", SC_ACCEPTED, delete.statusCode());
     }
-
 }
